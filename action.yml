@@ -13,6 +13,8 @@ runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v3
+      with:
+        repository: 'gbrls/action-dropbox-download'
     - name: 'run elixir'
       uses: docker://elixir
       with:
