@@ -5,6 +5,9 @@ inputs:
     description: 'Who to greet'
     required: true
     default: 'World'
+  dropbox-token:
+    description: 'Dropbox API Token'
+    required: true
 outputs:
   random-number:
     description: "Random number"
@@ -18,5 +21,7 @@ runs:
     - name: 'run elixir'
       uses: docker://elixir
       with:
-        entrypoint: ls
-        args: -la
+        entrypoint: elixir
+        args: scripts/main.exs
+        env:
+          DROPBOX_TOKEN: ${{ inputs.dropbox-token }}}
