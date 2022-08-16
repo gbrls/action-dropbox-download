@@ -19,10 +19,5 @@ runs:
       env:
         DROPBOX_TOKEN: ${{ inputs.dropbox-token }}}
       with:
-        run: |
-          mix local.hex --force
-          elixir scripts/main.exs
-          ls -la
-
         entrypoint: sh
         args: scripts/fetch-api.sh
