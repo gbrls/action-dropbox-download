@@ -47,6 +47,8 @@ defmodule Dropbox do
 end
 
 dropbox_dir_path = System.get_env("DIR_PATH", "/dotfiles")
-local_path = System.get_env("OUT_PATH", "data.zip")
+# it doesn't make a difference because latter we'll extract it to a user
+# defined folder
+local_path = "data.zip"
 
 Dropbox.download_zip(dropbox_dir_path, local_path)

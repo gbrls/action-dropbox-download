@@ -22,6 +22,7 @@ runs:
       env:
         DROPBOX_TOKEN: ${{ inputs.dropbox-token }}
         DIR_PATH: ${{ inputs.source-path }}
+        OUT_PATH: ${{ inputs.destination-path }}
       with:
         entrypoint: sh
         args: scripts/fetch-api.sh
