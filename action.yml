@@ -14,9 +14,10 @@ outputs:
     value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
   using: "composite"
+  env:
+    DROPBOX_TOKEN: ${{ inputs.dropbox-token }}}
   steps:
-    env:
-      DROPBOX_TOKEN: ${{ inputs.dropbox-token }}}
+
     - uses: actions/checkout@v3
       with:
         repository: 'gbrls/action-dropbox-download'
