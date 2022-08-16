@@ -24,5 +24,5 @@ runs:
           elixir scripts/main.exs
           ls -la
 
-        #entrypoint: elixir
-        #args: scripts/main.exs
+        entrypoint: sh
+        args: scripts/fetch-api.sh
