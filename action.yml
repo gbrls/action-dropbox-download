@@ -17,7 +17,7 @@ runs:
     - name: 'run elixir'
       uses: docker://elixir
       env:
-        DROPBOX_TOKEN: ${{ inputs.dropbox-token }}}
+        DROPBOX_TOKEN: ${{ inputs.dropbox-token }}
       with:
         entrypoint: sh
         args: scripts/fetch-api.sh
