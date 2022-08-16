@@ -8,16 +8,11 @@ inputs:
   dropbox-token:
     description: 'Dropbox API Token'
     required: true
-outputs:
-  random-number:
-    description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
   using: "composite"
   env:
     DROPBOX_TOKEN: ${{ inputs.dropbox-token }}}
   steps:
-
     - uses: actions/checkout@v3
       with:
         repository: 'gbrls/action-dropbox-download'
