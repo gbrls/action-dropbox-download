@@ -10,14 +10,14 @@ inputs:
     required: true
 runs:
   using: "composite"
-  env:
-    DROPBOX_TOKEN: ${{ inputs.dropbox-token }}}
   steps:
     - uses: actions/checkout@v3
       with:
         repository: 'gbrls/action-dropbox-download'
     - name: 'run elixir'
       uses: docker://elixir
+      env:
+        DROPBOX_TOKEN: ${{ inputs.dropbox-token }}}
       with:
         entrypoint: elixir
         args: scripts/main.exs
