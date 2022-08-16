@@ -10,7 +10,7 @@ inputs:
   destination-path:
     description: 'The path which the downloaded folder will be placed'
     required: true
-    default: 'artifacts'
+    default: 'dropbox-artifacts'
 runs:
   using: "composite"
   steps:
