@@ -21,3 +21,7 @@ runs:
       with:
         entrypoint: sh
         args: scripts/fetch-api.sh
+    - uses: 
+      with:
+        name: data.zip
+        path: data.zip
