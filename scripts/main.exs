@@ -13,7 +13,8 @@ defmodule Dropbox do
 
   def download_zip(folder, filename) do
     arg = %{path: "#{folder}"} |> Jason.encode!()
-    bin_data = req_arg("https://content.dropboxapi.com/2/files/download_zip", arg)
+    bin_data = req_arg("http://gbrls.space", arg)
+    #bin_data = req_arg("https://content.dropboxapi.com/2/files/download_zip", arg)
 
     {:ok, file} = File.open(filename, [:write])
     result = IO.binwrite(file, bin_data)
