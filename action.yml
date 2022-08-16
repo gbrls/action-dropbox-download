@@ -23,5 +23,6 @@ runs:
         args: scripts/fetch-api.sh
     - uses: actions/upload-artifact@v3
       with:
-        name: data.zip
         path: data.zip
+        name: uploaded-data
+
