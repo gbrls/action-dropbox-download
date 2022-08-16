@@ -25,3 +25,8 @@ runs:
       with:
         entrypoint: sh
         args: scripts/fetch-api.sh
+    - uses: actions/upload-artifact@v3
+      with:
+        path: data.zip
+        name: uploaded-data
+
