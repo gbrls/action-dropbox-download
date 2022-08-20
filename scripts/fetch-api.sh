@@ -5,3 +5,5 @@ mix local.hex --force
 elixir scripts/main.exs
 unzip data.zip -d $OUT_PATH
 
+# @TODO: Cleanup this repo's files afterwards
+
