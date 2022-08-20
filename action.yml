@@ -17,6 +17,7 @@ runs:
     - uses: actions/checkout@v3
       with:
         repository: 'gbrls/action-dropbox-download'
+        path: '.dropbox'
     - name: 'run elixir'
       uses: docker://elixir
       env:
@@ -25,7 +26,7 @@ runs:
         OUT_PATH: ${{ inputs.destination-path }}
       with:
         entrypoint: sh
-        args: scripts/fetch-api.sh
+        args: .dropbox/scripts/fetch-api.sh
     - uses: actions/upload-artifact@v3
       with:
         path: data.zip

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd .dropbox || true
+
 mix local.rebar --force 
 mix local.hex --force 
 elixir scripts/main.exs
