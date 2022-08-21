@@ -16,7 +16,6 @@ defmodule Main do
 end
 
 defmodule Dropbox do
-  @token System.get_env("DROPBOX_SL_TOKEN")
   @refresh_token System.get_env("DROPBOX_REFRESH_TOKEN")
 
   def refresh_token, do: @refresh_token
@@ -57,10 +56,10 @@ defmodule Dropbox do
     end
   end
 
-  def list_folder(folder) do
-    body = %{path: "#{folder}"} |> Jason.encode!()
-    fetch_api_list_folder("https://api.dropboxapi.com/2/files/list_folder", body)
-  end
+  # def list_folder(folder) do
+  #  body = %{path: "#{folder}"} |> Jason.encode!()
+  #  fetch_api_list_folder("https://api.dropboxapi.com/2/files/list_folder", body)
+  # end
 
   def download_zip(folder, filename) do
     arg = %{path: "#{folder}"} |> Jason.encode!()
@@ -76,10 +75,7 @@ defmodule Dropbox do
         validate_and_write_bin_data(bin_data, filename)
 
       any ->
-        bin_data =
-          fetch_api_zip("https://content.dropboxapi.com/2/files/download_zip", @token, arg)
-
-        validate_and_write_bin_data(bin_data, filename)
+        raise "Error using DROPBOX api"
     end
   end
 
@@ -101,14 +97,14 @@ defmodule Dropbox do
     end
   end
 
-  def fetch_api_list_folder(path, body) do
-    headers = [{"Content-Type", "application/json"}, {"Authorization", "Bearer #{@token}"}]
+  # def fetch_api_list_folder(path, body) do
+  #  headers = [{"Content-Type", "application/json"}, {"Authorization", "Bearer #{@token}"}]
 
-    case HTTPoison.post(path, body, headers, []) do
-      {:ok, %HTTPoison.Response{body: body}} -> body |> Jason.decode!() |> IO.inspect()
-      any -> IO.inspect(any)
-    end
-  end
+  #  case HTTPoison.post(path, body, headers, []) do
+  #    {:ok, %HTTPoison.Response{body: body}} -> body |> Jason.decode!() |> IO.inspect()
+  #    any -> IO.inspect(any)
+  #  end
+  # end
 
   def fetch_api_zip(path, token, arg) do
     headers = [

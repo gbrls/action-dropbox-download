@@ -1,9 +1,6 @@
 name: 'Dropbox Download Action'
 description: 'A Github Action to download directories from Dropbox'
 inputs:
-  dropbox-sl-token:
-    description: 'Dropbox API Token'
-    required: true
   dropbox-refresh-token:
     description: 'Dropbox Refresh Token'
     required: true
@@ -32,8 +29,3 @@ runs:
       with:
         entrypoint: sh
         args: .dropbox/scripts/fetch-api.sh
-    - uses: actions/upload-artifact@v3
-      with:
-        path: data.zip
-        name: uploaded-data
-
