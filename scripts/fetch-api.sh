@@ -1,8 +1,10 @@
 #!/bin/sh
 
-# Downloads files from API using DRPBOX_TOKEN
+# Downloads files from API using DRPOBOX_REFRESH_TOKEN
 
 cd .dropbox || true
+
+set -e
 
 mix local.rebar --force 
 mix local.hex --force 
