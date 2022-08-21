@@ -63,7 +63,10 @@ defmodule Dropbox do
         {:error, data}
 
       _ ->
-        IO.puts("got zip file")
+        if String.starts_with?(response, "Error in call to API") do
+          raise "Error calling API (#{response})"
+        end
+
         {:ok, file} = File.open(filename, [:write])
         result = IO.binwrite(file, response)
 
