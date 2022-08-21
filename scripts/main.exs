@@ -44,6 +44,14 @@ defmodule Dropbox do
   # end
 
   def fetch_sl_token_with_refresh() do
+    body =
+      ["grant_type=refresh_token", "client_id=fju3fjnb714ptef", "refresh_token=#{@refresh_token}"]
+      |> Enum.join("\n")
+
+    case HTTPoison.post("https://api.dropbox.com/oauth2/token", body, [], []) do
+      {:ok, %HTTPoison.Response{body: body}} -> body |> Jason.decode!() |> IO.inspect()
+      any -> IO.inspect(any)
+    end
   end
 
   def list_folder(folder) do
@@ -54,24 +62,40 @@ defmodule Dropbox do
   def download_zip(folder, filename) do
     arg = %{path: "#{folder}"} |> Jason.encode!()
 
-    # This works using the SL token and might fail
-    bin_data = fetch_api_zip("https://content.dropboxapi.com/2/files/download_zip", arg)
+    # First we try to get a new SL Token
+    maybe_sl_token = fetch_sl_token_with_refresh()
 
-    case Jason.decode(bin_data) do
-      {:ok, _data} ->
-        IO.puts("Error fetching API")
-        Dropbox.fetch_sl_token_with_refresh()
+    case Map.fetch(maybe_sl_token, :access_token) do
+      {:ok, token} ->
+        bin_data =
+          fetch_api_zip("https://content.dropboxapi.com/2/files/download_zip", token, arg)
+
+        validate_and_write_bin_data(bin_data, filename)
+
+      any ->
+        bin_data =
+          fetch_api_zip("https://content.dropboxapi.com/2/files/download_zip", @token, arg)
+
+        validate_and_write_bin_data(bin_data, filename)
+    end
+  end
+
+  def validate_and_write_bin_data(response, filename) do
+    case Jason.decode(response) do
+      {:ok, data} ->
+        IO.puts("Error fetching API, cause: (#{data})")
+
+        {:error, data}
 
       _ ->
-        "got zip file"
+        IO.puts("got zip file")
+        {:ok, file} = File.open(filename, [:write])
+        result = IO.binwrite(file, response)
+
+        File.close(file)
+
+        result
     end
-
-    {:ok, file} = File.open(filename, [:write])
-    result = IO.binwrite(file, bin_data)
-
-    File.close(file)
-
-    {result, bin_data}
   end
 
   def fetch_api_list_folder(path, body) do
@@ -83,10 +107,10 @@ defmodule Dropbox do
     end
   end
 
-  def fetch_api_zip(path, arg) do
+  def fetch_api_zip(path, token, arg) do
     headers = [
       {"Content-Type", "text/plain; charset=utf-8"},
-      {"Authorization", "Bearer #{@token}"},
+      {"Authorization", "Bearer #{token}"},
       {"Dropbox-Api-Arg", arg}
     ]
 
