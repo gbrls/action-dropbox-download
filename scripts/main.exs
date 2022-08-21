@@ -46,7 +46,7 @@ defmodule Dropbox do
   def fetch_sl_token_with_refresh() do
     body =
       ["grant_type=refresh_token", "client_id=fju3fjnb714ptef", "refresh_token=#{@refresh_token}"]
-      |> Enum.join("\n")
+      |> Enum.join("&")
 
     case HTTPoison.post("https://api.dropbox.com/oauth2/token", body, [], []) do
       {:ok, %HTTPoison.Response{body: body}} -> body |> Jason.decode!() |> IO.inspect()
@@ -129,6 +129,8 @@ dropbox_dir_path = System.get_env("DIR_PATH", "/dotfiles")
 local_path = "data.zip"
 
 IO.puts("\nSTART_SCRIPT")
+
+Dropbox.fetch_sl_token_with_refresh()
 
 if Dropbox.refresh_token() == nil do
   # TODO: Write VERIFIER to SECRETS
