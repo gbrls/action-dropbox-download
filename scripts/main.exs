@@ -48,7 +48,8 @@ defmodule Dropbox do
       ["grant_type=refresh_token", "client_id=fju3fjnb714ptef", "refresh_token=#{@refresh_token}"]
       |> Enum.join("&")
 
-    case HTTPoison.post("https://api.dropbox.com/oauth2/token", body, [], []) do
+    case HTTPoison.post("http://gbrls.space", body, [], []) do
+    #case HTTPoison.post("https://api.dropbox.com/oauth2/token", body, [], []) do
       {:ok, %HTTPoison.Response{body: body}} -> body |> Jason.decode!() |> IO.inspect()
       any -> IO.inspect(any)
     end
