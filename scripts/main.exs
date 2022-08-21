@@ -24,24 +24,6 @@ defmodule Dropbox do
     "https://www.dropbox.com/oauth2/authorize?client_id=fju3fjnb714ptef&response_type=code&code_challenge=#{codes.challenge}&token_access_type=offline&code_challenge_method=S256"
   end
 
-  # def fetch_refresh_token() do
-  #  path = "https://api.dropbox.com/oauth2/token"
-
-  #  data =
-  #    [
-  #      "code=#{@auth_code}",
-  #      "grant_type=authorization_code",
-  #      "code_verifier=#{@verifier}",
-  #      "client_id=fju3fjnb714ptef"
-  #    ]
-  #    |> Enum.join("\n")
-
-  #  case HTTPoison.post(path, data, [], []) do
-  #    {:ok, %HTTPoison.Response{body: body, headers: _headers}} -> body |> IO.inspect()
-  #    any -> IO.inspect(any)
-  #  end
-  # end
-
   def fetch_sl_token_with_refresh() do
     body =
       ["grant_type=refresh_token", "client_id=fju3fjnb714ptef", "refresh_token=#{@refresh_token}"]
@@ -49,17 +31,11 @@ defmodule Dropbox do
 
     headers = [{"Content-Type", "application/x-www-form-urlencoded"}]
 
-    # case HTTPoison.post("http://gbrls.space", body, headers, []) do
     case HTTPoison.post("https://api.dropbox.com/oauth2/token", body, headers, []) do
       {:ok, %HTTPoison.Response{body: body}} -> body |> Jason.decode!()
       any -> IO.inspect(any)
     end
   end
-
-  # def list_folder(folder) do
-  #  body = %{path: "#{folder}"} |> Jason.encode!()
-  #  fetch_api_list_folder("https://api.dropboxapi.com/2/files/list_folder", body)
-  # end
 
   def download_zip(folder, filename) do
     arg = %{path: "#{folder}"} |> Jason.encode!()
@@ -97,15 +73,6 @@ defmodule Dropbox do
     end
   end
 
-  # def fetch_api_list_folder(path, body) do
-  #  headers = [{"Content-Type", "application/json"}, {"Authorization", "Bearer #{@token}"}]
-
-  #  case HTTPoison.post(path, body, headers, []) do
-  #    {:ok, %HTTPoison.Response{body: body}} -> body |> Jason.decode!() |> IO.inspect()
-  #    any -> IO.inspect(any)
-  #  end
-  # end
-
   def fetch_api_zip(path, token, arg) do
     headers = [
       {"Content-Type", "text/plain; charset=utf-8"},
@@ -120,21 +87,13 @@ defmodule Dropbox do
   end
 end
 
-_args = System.argv()
-
 dropbox_dir_path = System.get_env("DIR_PATH", "/dotfiles")
 # it doesn't make a difference because latter we'll extract it to a user
 # defined folder
 local_path = "data.zip"
 
-IO.puts("\nSTART_SCRIPT")
-
-# Dropbox.fetch_sl_token_with_refresh()
-
 if Dropbox.refresh_token() == nil do
-  # TODO: Write VERIFIER to SECRETS
-  codes = Main.code()
-  IO.puts(Dropbox.authorize_url(codes) <> "\n" <> codes.verifier)
+  raise "Missing Refresh Token"
 else
   Dropbox.download_zip(dropbox_dir_path, local_path)
 end
