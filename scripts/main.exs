@@ -58,7 +58,7 @@ defmodule Dropbox do
   def validate_and_write_bin_data(response, filename) do
     case Jason.decode(response) do
       {:ok, data} ->
-        IO.puts("Error fetching API, cause: (#{data})")
+        raise "Error fetching API, cause: (#{data})"
 
         {:error, data}
 
