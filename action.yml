@@ -1,5 +1,8 @@
 name: 'Dropbox Download Action'
 description: 'A Github Action to download directories from Dropbox'
+branding: 
+  icon: 'download-cloud'
+  color: 'purple'
 inputs:
   dropbox-refresh-token:
     description: 'Dropbox Refresh Token'
