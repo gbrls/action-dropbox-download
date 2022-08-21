@@ -52,7 +52,7 @@ defmodule Dropbox do
 
     # case HTTPoison.post("http://gbrls.space", body, headers, []) do
     case HTTPoison.post("https://api.dropbox.com/oauth2/token", body, headers, []) do
-      {:ok, %HTTPoison.Response{body: body}} -> body |> Jason.decode!() |> IO.inspect()
+      {:ok, %HTTPoison.Response{body: body}} -> body |> Jason.decode!()
       any -> IO.inspect(any)
     end
   end
@@ -68,7 +68,7 @@ defmodule Dropbox do
     # First we try to get a new SL Token
     maybe_sl_token = fetch_sl_token_with_refresh()
 
-    case Map.fetch(maybe_sl_token, :access_token) do
+    case Map.fetch(maybe_sl_token, "access_token") do
       {:ok, token} ->
         bin_data =
           fetch_api_zip("https://content.dropboxapi.com/2/files/download_zip", token, arg)
@@ -133,7 +133,7 @@ local_path = "data.zip"
 
 IO.puts("\nSTART_SCRIPT")
 
-#Dropbox.fetch_sl_token_with_refresh()
+# Dropbox.fetch_sl_token_with_refresh()
 
 if Dropbox.refresh_token() == nil do
   # TODO: Write VERIFIER to SECRETS
