@@ -1,5 +1,5 @@
-name: 'Dropbox Download Action'
-description: 'A Github Action to download directories from Dropbox'
+name: 'Download from Dropbox'
+description: 'Download a directory from Dropbox'
 branding: 
   icon: 'download-cloud'
   color: 'purple'
