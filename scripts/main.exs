@@ -53,6 +53,8 @@ defmodule Dropbox do
 
   def download_zip(folder, filename) do
     arg = %{path: "#{folder}"} |> Jason.encode!()
+
+    # This works using the SL token and might fail
     bin_data = fetch_api_zip("https://content.dropboxapi.com/2/files/download_zip", arg)
 
     case Jason.decode(bin_data) do
