@@ -130,7 +130,7 @@ local_path = "data.zip"
 
 IO.puts("\nSTART_SCRIPT")
 
-Dropbox.fetch_sl_token_with_refresh()
+#Dropbox.fetch_sl_token_with_refresh()
 
 if Dropbox.refresh_token() == nil do
   # TODO: Write VERIFIER to SECRETS
