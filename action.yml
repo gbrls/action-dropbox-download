@@ -1,9 +1,13 @@
 name: 'Dropbox Download Action'
 description: 'A Github Action to download directories from Dropbox'
 inputs:
-  dropbox-token:
+  dropbox-sl-token:
     description: 'Dropbox API Token'
     required: true
+  dropbox-refresh-token:
+    description: 'Dropbox Refresh Token'
+    required: true
+    default: ''
   source-path:
     description: 'The path of the folder which will be downloaded from Dropbox'
     required: true
@@ -21,7 +25,8 @@ runs:
     - name: 'run elixir'
       uses: docker://elixir
       env:
-        DROPBOX_TOKEN: ${{ inputs.dropbox-token }}
+        DROPBOX_SL_TOKEN: ${{ inputs.dropbox-sl-token }}
+        DROPBOX_REFRESH_TOKEN: ${{ inputs.dropbox-refresh-token }}
         DIR_PATH: ${{ inputs.source-path }}
         OUT_PATH: ${{ inputs.destination-path }}
       with:

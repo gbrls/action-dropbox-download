@@ -16,10 +16,8 @@ defmodule Main do
 end
 
 defmodule Dropbox do
-  @token System.get_env("DROPBOX_TOKEN")
-  @refresh_token System.get_env("REFRESH_TOKEN")
-  @auth_code System.get_env("AUTHORIZATION_CODE")
-  @verifier System.get_env("VERIFIER")
+  @token System.get_env("DROPBOX_SL_TOKEN")
+  @refresh_token System.get_env("DROPBOX_REFRESH_TOKEN")
 
   def refresh_token, do: @refresh_token
 
@@ -27,32 +25,44 @@ defmodule Dropbox do
     "https://www.dropbox.com/oauth2/authorize?client_id=fju3fjnb714ptef&response_type=code&code_challenge=#{codes.challenge}&token_access_type=offline&code_challenge_method=S256"
   end
 
-  def fetch_refresh_token() do
-    path = "https://api.dropbox.com/oauth2/token"
+  # def fetch_refresh_token() do
+  #  path = "https://api.dropbox.com/oauth2/token"
 
-    data =
-      [
-        "code=#{@auth_code}",
-        "grant_type=authorization_code",
-        "code_verifier=#{@verifier}",
-        "client_id=fju3fjnb714ptef"
-      ]
-      |> Enum.join("\n")
+  #  data =
+  #    [
+  #      "code=#{@auth_code}",
+  #      "grant_type=authorization_code",
+  #      "code_verifier=#{@verifier}",
+  #      "client_id=fju3fjnb714ptef"
+  #    ]
+  #    |> Enum.join("\n")
 
-    case HTTPoison.post(path, data, [], []) do
-      {:ok, %HTTPoison.Response{body: body, headers: _headers}} -> body |> IO.inspect()
-      any -> IO.inspect(any)
-    end
+  #  case HTTPoison.post(path, data, [], []) do
+  #    {:ok, %HTTPoison.Response{body: body, headers: _headers}} -> body |> IO.inspect()
+  #    any -> IO.inspect(any)
+  #  end
+  # end
+
+  def fetch_sl_token_with_refresh() do
   end
 
   def list_folder(folder) do
     body = %{path: "#{folder}"} |> Jason.encode!()
-    req_body("https://api.dropboxapi.com/2/files/list_folder", body)
+    fetch_api_list_folder("https://api.dropboxapi.com/2/files/list_folder", body)
   end
 
   def download_zip(folder, filename) do
     arg = %{path: "#{folder}"} |> Jason.encode!()
-    bin_data = req_arg("https://content.dropboxapi.com/2/files/download_zip", arg)
+    bin_data = fetch_api_zip("https://content.dropboxapi.com/2/files/download_zip", arg)
+
+    case Jason.decode(bin_data) do
+      {:ok, _data} ->
+        IO.puts("Error fetching API")
+        Dropbox.fetch_sl_token_with_refresh()
+
+      _ ->
+        "got zip file"
+    end
 
     {:ok, file} = File.open(filename, [:write])
     result = IO.binwrite(file, bin_data)
@@ -62,7 +72,7 @@ defmodule Dropbox do
     {result, bin_data}
   end
 
-  def req_body(path, body) do
+  def fetch_api_list_folder(path, body) do
     headers = [{"Content-Type", "application/json"}, {"Authorization", "Bearer #{@token}"}]
 
     case HTTPoison.post(path, body, headers, []) do
@@ -71,7 +81,7 @@ defmodule Dropbox do
     end
   end
 
-  def req_arg(path, arg) do
+  def fetch_api_zip(path, arg) do
     headers = [
       {"Content-Type", "text/plain; charset=utf-8"},
       {"Authorization", "Bearer #{@token}"},
@@ -85,14 +95,17 @@ defmodule Dropbox do
   end
 end
 
-args = System.argv()
+_args = System.argv()
 
 dropbox_dir_path = System.get_env("DIR_PATH", "/dotfiles")
 # it doesn't make a difference because latter we'll extract it to a user
 # defined folder
 local_path = "data.zip"
 
-if length(args) > 0 && hd(args) == "url" do
+IO.puts("\nSTART_SCRIPT")
+
+if Dropbox.refresh_token() == nil do
+  # TODO: Write VERIFIER to SECRETS
   codes = Main.code()
   IO.puts(Dropbox.authorize_url(codes) <> "\n" <> codes.verifier)
 else
