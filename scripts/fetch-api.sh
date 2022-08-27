@@ -10,6 +10,10 @@ mix local.rebar --force
 mix local.hex --force 
 elixir scripts/main.exs 
 
-unzip data.zip -d ../$OUT_PATH
+mv data.zip ../tmp-dropbox-data.zip
 
-rm -rf ../.dropbox || true
+cd ..
+rm -rf ./.dropbox || true
+
+
+unzip tmp-dropbox-data.zip -d $OUT_PATH
