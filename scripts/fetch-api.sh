@@ -17,4 +17,4 @@ rm -rf ./.dropbox || true
 
 
 unzip tmp-dropbox-data.zip -d $OUT_PATH
-chmod -R 777 $OUT_PATH
+chmod -R 666 $OUT_PATH
