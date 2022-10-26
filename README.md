@@ -2,7 +2,7 @@
 
 This action downloads the selected dropbox folder to a given path.
 
-```
+```yaml
 name: test workflow
 on:
   workflow_dispatch:
