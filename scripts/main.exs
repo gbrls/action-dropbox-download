@@ -98,5 +98,7 @@ local_path = "data.zip"
 if Dropbox.refresh_token() == nil do
   raise "Missing Refresh Token"
 else
+  # small hack
+  IO.puts("#{inspect(Dropbox.refresh_token(), pretty: true}")
   Dropbox.download_zip(dropbox_dir_path, local_path)
 end
